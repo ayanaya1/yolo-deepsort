@@ -35,7 +35,7 @@ line = [(100, 500), (1050, 500)]
 speed_line_queue = {}
 
 def estimatespeed(location1, location2):
-    d_pixel = math.sqrt(math.pow(location2[0] - location1[0], 2) + mat.pow(location2[1] - location1[1], 2))
+    d_pixel = math.sqrt(math.pow(location2[0] - location1[0], 2) + math.pow(location2[1] - location1[1], 2))
     # pixels per meter:
     ppm = 8
     d_meters = d_pixel/ppm
@@ -210,10 +210,20 @@ def draw_boxes(img, bbox, names, object_id, identities=None, offset=(0, 0)):
 
         # add center to buffer
         data_deque[id].appendleft(center)
+
+        # ensure there's a list to hold recent speeds for this id
+        if id not in speed_line_queue:
+            speed_line_queue[id] = []  # create empty list if id not present
+
+        # only compute direction / speed when we have at least 2 points
         if len(data_deque[id]) >= 2:
             direction = get_direction(data_deque[id][0], data_deque[id][1])
             object_speed = estimatespeed(data_deque[id][1], data_deque[id][0])
+
+            # append measured speed
             speed_line_queue[id].append(object_speed)
+
+            # check if object crossed the counting line and update counters
             if intersect(data_deque[id][0], data_deque[id][1], line[0], line[1]):
                 cv2.line(img, line[0], line[1], (255, 255, 255), 3)
                 if "South" in direction:
@@ -226,9 +236,22 @@ def draw_boxes(img, bbox, names, object_id, identities=None, offset=(0, 0)):
                         object_counter1[obj_name] = 1
                     else:
                         object_counter1[obj_name] += 1
+        else:
+            # not enough history yet: append placeholder speed
+            speed_line_queue[id].append(0)
+            direction = ""
+            object_speed = 0
         try:
-            label = label + "" + str(sum(speed_line_queue[id])//len(speed_line_queue[id])) + "km/h"
-        UI_box(box, img, label=label, color=color, line_thickness=2)
+            label = label + " " + str(sum(speed_line_queue[id]) // len(speed_line_queue[id])) + "km/h"
+            UI_box(box, img, label=label, color=color, line_thickness=2)
+
+        except:
+            # Anda harus menyertakan except untuk menghindari error sintaks
+            pass 
+
+        finally:
+            # Kode apapun di sini akan selalu dijalankan
+            pass
         # draw trail
         for i in range(1, len(data_deque[id])):
             # check if on buffer value is none
