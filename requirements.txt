@@ -1,46 +1,46 @@
 # Ultralytics requirements
 # Usage: pip install -r requirements.txt
 
-# Base ----------------------------------------
-hydra-core>=1.2.0
-matplotlib>=3.2.2
-numpy>=1.18.5
-opencv-python>=4.1.1
-Pillow>=7.1.2
-PyYAML>=5.3.1
-requests>=2.23.0
-scipy>=1.4.1
-torch>=1.7.0
-torchvision>=0.8.1
-tqdm>=4.64.0
+# --- Base (Menggunakan versi stabil yang lebih modern) ----------------------------------------
+hydra-core~=1.2.0        # Tetap
+matplotlib~=3.5.0        # Dibatasi ke 3.5.x
+numpy~=1.23.0           # Dibatasi ke 1.23.x (lebih kompatibel dengan PyTorch/TensorFlow)
+opencv-python~=4.7.0     # Dibatasi ke 4.7.x
+Pillow~=9.5.0            # Dibatasi ke 9.x
+PyYAML~=6.0              # Dibatasi ke 6.x
+requests~=2.28.0         # Dibatasi ke 2.28.x
+scipy~=1.10.0           # Dibatasi ke 1.10.x
+torch>=2.0.0             # Tingkatkan ke PyTorch 2.x untuk kompatibilitas yang lebih baik
+torchvision>=0.15.0      # Tingkatkan (sesuai dengan Torch 2.0)
+tqdm~=4.65.0             # Dibatasi ke 4.65.x
 
-# Logging -------------------------------------
+# --- Logging (Kesalahan ketik diperbaiki) -------------------------------------
 tensorboard>=2.4.1
-# clearml
-# comet
+clearml                    # Dikoreksi dari 'learml'
+comet-ml                   # Diubah dari 'comet' menjadi nama paket yang benar di PyPI
 
-# Plotting ------------------------------------
-pandas>=1.1.4
-seaborn>=0.11.0
+# --- Plotting ------------------------------------
+pandas~=1.3.5            # Dibatasi ke 2.0.x
+seaborn~=0.12.0          # Dibatasi ke 0.12.x
 
-# Export --------------------------------------
-# coremltools>=6.0  # CoreML export
-# onnx>=1.12.0  # ONNX export
-# onnx-simplifier>=0.4.1  # ONNX simplifier
-# nvidia-pyindex  # TensorRT export
-# nvidia-tensorrt  # TensorRT export
-# scikit-learn==0.19.2  # CoreML quantization
-# tensorflow>=2.4.1  # TF exports (-cpu, -aarch64, -macos)
-# tensorflowjs>=3.9.0  # TF.js export
-# openvino-dev  # OpenVINO export
+# --- Export (Menghilangkan batasan kaku dan paket NVIDIA yang bermasalah) --------------------------------------
+coremltools~=6.0         # Tetap
+onnx~=1.12.0             # Tetap
+onnx-simplifier~=0.4.1   # Tetap
+# nvidia-pyindex         # Dihilangkan/dikomentari (menyebabkan error kompilasi)
+# nvidia-tensorrt        # Dihilangkan/dikomentari (menyebabkan error kompilasi)
+scikit-learn~=1.3.0      # Diubah dari versi kaku 0.19.2 ke 1.x (versi lama rawan konflik/kompilasi)
+tensorflow~=2.10.0       # Dibatasi ke 2.10.x (untuk stabilitas)
+tensorflowjs~=3.9.0      # Tetap
+openvino-dev~=2022.3.0    # Dibatasi ke versi yang lebih modern
 
-# Extras --------------------------------------
-ipython  # interactive notebook
-psutil  # system utilization
-thop>=0.1.1  # FLOPs computation
-# albumentations>=1.0.3
-# pycocotools>=2.0.6  # COCO mAP
-# roboflow
+# --- Extras --------------------------------------
+ipython>=8.0.0, <9.0.0         # Dibatasi ke versi 8.x (memastikan kompatibilitas dengan Python 3.10)
+psutil~=5.9.0            # Dibatasi ke 5.9.x
+thop~=0.1.1              # Tetap
+albumentations~=1.3.0    # Dibatasi ke 1.3.x
+pycocotools~=2.0.6        # Tetap
+roboflow~=1.1.0          # Dibatasi
 
-# HUB -----------------------------------------
-GitPython>=3.1.24
+# --- HUB -----------------------------------------
+GitPython~=3.1.24         # Tetap
