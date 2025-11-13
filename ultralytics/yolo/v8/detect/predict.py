@@ -20,6 +20,9 @@ from deep_sort_pytorch.utils.parser import get_config
 from deep_sort_pytorch.deep_sort import DeepSort
 from collections import deque
 import numpy as np
+import csv
+from datetime import datetime
+import os
 
 palette = (2 ** 11 - 1, 2 ** 15 - 1, 2 ** 20 - 1)
 data_deque = {}
@@ -33,6 +36,41 @@ object_counter1 = {}
 line = [(100, 500), (1050, 500)]
 
 speed_line_queue = {}
+
+# CSV file path for saving vehicle counts
+csv_output_dir = Path("output")
+csv_output_file = csv_output_dir / "vehicle_counts.csv"
+
+def initialize_csv():
+    """Initialize CSV file with headers if it doesn't exist"""
+    csv_output_dir.mkdir(parents=True, exist_ok=True)
+    
+    if not csv_output_file.exists():
+        with open(csv_output_file, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['Timestamp', 'Vehicle_Type', 'Entering', 'Leaving', 'Total'])
+        print(f"CSV file initialized: {csv_output_file}")
+    else:
+        print(f"CSV file already exists: {csv_output_file}")
+
+def save_counts_to_csv():
+    """Save current vehicle counts to CSV file"""
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Collect all unique vehicle types from both counters
+    all_vehicle_types = set(list(object_counter.keys()) + list(object_counter1.keys()))
+    
+    with open(csv_output_file, 'a', newline='') as f:
+        writer = csv.writer(f)
+        
+        for vehicle_type in all_vehicle_types:
+            entering = object_counter1.get(vehicle_type, 0)
+            leaving = object_counter.get(vehicle_type, 0)
+            total = entering + leaving
+            
+            writer.writerow([timestamp, vehicle_type, entering, leaving, total])
+    
+    print(f"Vehicle counts saved to CSV at {timestamp}")
 
 def estimatespeed(location1, location2):
     d_pixel = math.sqrt(math.pow(location2[0] - location1[0], 2) + math.pow(location2[1] - location1[1], 2))
@@ -284,6 +322,12 @@ def draw_boxes(img, bbox, names, object_id, identities=None, offset=(0, 0)):
 
 
 class DetectionPredictor(BasePredictor):
+
+    def __init__(self, cfg=DEFAULT_CONFIG, overrides=None):
+        super().__init__(cfg, overrides)
+        self.frame_count = 0
+        self.save_interval = 100  # Save to CSV every 100 frames
+        initialize_csv()  # Initialize CSV file when predictor is created
 
     def get_annotator(self, img):
         return Annotator(img, line_width=self.args.line_thickness, example=str(self.model.names))
