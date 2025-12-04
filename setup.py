@@ -23,7 +23,7 @@ setup(
     version=get_version(),  # version of pypi package
     python_requires=">=3.7.0",
     license='GPL-3.0',
-    description='Ultralytics YOLOv8 and HUB',
+    description='Ultralytics YOLOv8-v11 and HUB',
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/ultralytics/ultralytics",
@@ -48,6 +48,6 @@ setup(
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
         "Topic :: Scientific/Engineering :: Image Recognition", "Operating System :: POSIX :: Linux",
         "Operating System :: MacOS", "Operating System :: Microsoft :: Windows"],
-    keywords="machine-learning, deep-learning, vision, ML, DL, AI, YOLO, YOLOv3, YOLOv5, YOLOv8, HUB, Ultralytics",
+    keywords="machine-learning, deep-learning, vision, ML, DL, AI, YOLO, YOLOv3, YOLOv5, YOLOv8, YOLOv11, HUB, Ultralytics",
     entry_points={
         'console_scripts': ['yolo = ultralytics.yolo.cli:cli', 'ultralytics = ultralytics.yolo.cli:cli'],})
